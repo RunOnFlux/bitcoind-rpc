@@ -58,6 +58,7 @@ describe('RpcClient', function() {
     EventEmitter.call(this);
   }
   util.inherits(FakeResponse, EventEmitter);
+  FakeResponse.prototype.setEncoding = function() {};
 
   function FakeRequest(){
     EventEmitter.call(this);
@@ -69,6 +70,15 @@ describe('RpcClient', function() {
     this.data = data;
   };
   FakeRequest.prototype.end = function() {};
+
+  // The message JSON.parse gives for a body, which differs between V8 releases.
+  function parseError(body) {
+    try {
+      JSON.parse(body);
+    } catch (e) {
+      return e.message;
+    }
+  }
 
   it('should use https', function() {
 
@@ -105,7 +115,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       var req =  new FakeRequest();
       setImmediate(function(){
@@ -136,7 +146,7 @@ describe('RpcClient', function() {
       disableAgent: false
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       var req = new FakeRequest();
       setImmediate(function(){
@@ -172,7 +182,7 @@ describe('RpcClient', function() {
       disableAgent: false
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       var req = new FakeRequest();
       setImmediate(function(){
@@ -209,7 +219,7 @@ describe('RpcClient', function() {
       disableAgent: false
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       setImmediate(function(){
         res.emit('data', '[{}, {}, {}]');
@@ -248,7 +258,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       res.statusCode = 401;
       setImmediate(function(){
@@ -278,7 +288,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       res.statusCode = 403;
       setImmediate(function(){
@@ -308,7 +318,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       res.statusCode = 500;
       setImmediate(function(){
@@ -339,7 +349,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var req = new FakeRequest();
       setImmediate(function(){
         req.emit('error', new Error('write EPIPE'));
@@ -373,7 +383,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       setImmediate(function(){
         res.emit('data', '{}');
@@ -406,7 +416,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       var req = new FakeRequest();
       setImmediate(function(){
@@ -436,7 +446,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       setImmediate(function(){
         res.emit('data', 'not a json string');
@@ -450,7 +460,7 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Bitcoin JSON-RPC: Error Parsing JSON: Unexpected token o');
+      error.message.should.equal('Bitcoin JSON-RPC: Error Parsing JSON: ' + parseError('not a json string'));
       done();
     });
 
@@ -467,7 +477,7 @@ describe('RpcClient', function() {
       disableAgent: true
     });
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       var res = new FakeResponse();
       setImmediate(function(){
         res.emit('data', '');
@@ -481,7 +491,7 @@ describe('RpcClient', function() {
     client.getDifficulty(function(error, parsedBuf) {
       requestStub.restore();
       should.exist(error);
-      error.message.should.equal('Bitcoin JSON-RPC: Error Parsing JSON: Unexpected end of input');
+      error.message.should.equal('Bitcoin JSON-RPC: Error Parsing JSON: ' + parseError(''));
       done();
     });
 
@@ -504,7 +514,7 @@ describe('RpcClient', function() {
 
     var calledPort = false;
 
-    var requestStub = sinon.stub(client.protocol, 'request', function(options, callback){
+    var requestStub = sinon.stub(client.protocol, 'request').callsFake(function(options, callback){
       calledPort = options.port;
       var res = new FakeResponse();
       setImmediate(function(){
