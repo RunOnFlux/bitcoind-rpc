@@ -34,7 +34,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/runonflux/bitcoind-rpc"
+    "url": "https://github.com/RunOnFlux/bitcoind-rpc"
   },
   "license": "MIT",
   "main": "lib/index.js",
@@ -61,7 +61,7 @@
     "sinon": "^22.1.0"
   },
   "bugs": {
-    "url": "https://github.com/runonflux/bitcoind-rpc/issues"
+    "url": "https://github.com/RunOnFlux/bitcoind-rpc/issues"
   },
-  "homepage": "https://github.com/runonflux/bitcoind-rpc"
+  "homepage": "https://github.com/RunOnFlux/bitcoind-rpc"
 }
