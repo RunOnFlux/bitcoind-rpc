@@ -1,7 +1,7 @@
 {
-  "name": "bitcoind-rpc",
+  "name": "@runonflux/bitcoind-rpc",
   "description": "Bitcoin Client Library exptended for Flux calls to connect to Flux via RPC",
-  "version": "0.7.1",
+  "version": "0.8.0",
   "author": {
     "name": "Stephen Pair",
     "email": "stephen@bitpay.com"
@@ -34,26 +34,34 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/runonflux/bitcoind-rpc"
+    "url": "https://github.com/RunOnFlux/bitcoind-rpc"
   },
   "license": "MIT",
   "main": "lib/index.js",
-  "scripts": {
-    "test": "node_modules/.bin/mocha test -R spec",
-    "coverage": "node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- --recursive"
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=24"
   },
-  "devDependencies": {
-    "chai": "^1.10.0",
-    "coveralls": "^2.11.2",
-    "istanbul": "^0.3.5",
-    "mocha": "^2.1.0",
-    "sinon": "^1.12.2"
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "test": "mocha test -R spec",
+    "coverage": "c8 mocha test -R spec"
   },
   "dependencies": {
-    "async": "^1.3.0"
+    "async": "^3.2.6"
+  },
+  "devDependencies": {
+    "c8": "^12.0.0",
+    "chai": "^6.3.0",
+    "mocha": "^12.0.3",
+    "sinon": "^22.1.0"
   },
   "bugs": {
-    "url": "https://github.com/runonflux/bitcoind-rpc/issues"
+    "url": "https://github.com/RunOnFlux/bitcoind-rpc/issues"
   },
-  "homepage": "https://github.com/runonflux/bitcoind-rpc"
+  "homepage": "https://github.com/RunOnFlux/bitcoind-rpc"
 }

@@ -5,10 +5,10 @@ A client library to connect to Flux RPC in JavaScript.
 
 ## Get Started
 
-bitcoind-rpc.js runs on [node](http://nodejs.org/), and can be installed via [npm](https://npmjs.org/):
+bitcoind-rpc.js runs on [Node.js](https://nodejs.org/) 24 or newer, and can be installed via [npm](https://www.npmjs.com/):
 
 ```bash
-npm install bitcoind-rpc
+npm install @runonflux/bitcoind-rpc
 ```
 
 ## Examples
@@ -16,7 +16,7 @@ npm install bitcoind-rpc
 ```javascript
 var run = function() {
   var bitcore = require('bitcore');
-  var RpcClient = require('bitcoind-rpc');
+  var RpcClient = require('@runonflux/bitcoind-rpc');
 
   var config = {
     protocol: 'http',
